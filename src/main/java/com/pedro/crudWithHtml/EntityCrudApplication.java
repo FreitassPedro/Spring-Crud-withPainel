@@ -1,4 +1,4 @@
-package com.pedro.entitycrud;
+package com.pedro.crudWithHtml;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
