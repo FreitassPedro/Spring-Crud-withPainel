@@ -2,9 +2,11 @@ package com.pedro.crudWithHtml.controller;
 
 import com.pedro.crudWithHtml.model.Estudante;
 import com.pedro.crudWithHtml.service.EstudanteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,18 +26,23 @@ public class EstudanteController {
     @GetMapping("/novo")
     public String novoEstudante(Model model) {
         Estudante estudante = new Estudante();
-        model.addAttribute("novoEstudante",estudante);
+        model.addAttribute("novoEstudante", estudante);
         return "/novo-estudante";
     }
 
     @PostMapping("/gravar")
     public String salvarEstudante(
-            @ModelAttribute("novoEstudante") Estudante estudante,
+            @ModelAttribute("novoEstudante") @Valid Estudante estudante,
+            BindingResult erros,
             RedirectAttributes attributes) {
-        estudanteService.criarEstudante(estudante);
 
-        attributes.addFlashAttribute("mensagem", "Estudante salvo com sucesso!");
-        return "redirect:/novo";
+        if (!erros.hasErrors()) {
+            estudanteService.criarEstudante(estudante);
+
+            attributes.addFlashAttribute("mensagem", "Estudante salvo com sucesso!");
+            return "redirect:/novo";
+        }
+        return "/novo-estudante";
+
     }
-
 }
